@@ -1,6 +1,6 @@
 # Fixed Mistranslations & Restored Dialogue
 
-Native Dusklight mod (`com.example.translationfix`, version 2.3.3). It fixes a few English
+Native Dusklight mod (`com.example.translationfix`, version 2.3.4). It fixes a few English
 mistranslations in Twilight Princess and restores two pieces of cut dialogue.
 
 ## How it works
@@ -47,10 +47,10 @@ Both restorations can be switched off in the Mods menu ("Restored cut content"):
 Build with the Dusklight SDK (v2.0.2) once per target platform, then merge the per-platform
 bundles into one .dusk:
 
-    python3 tools/merge_mod.py -o com.example.translationfix_2.3.3.dusk --symgen symgen \
+    python3 tools/merge_mod.py -o com.example.translationfix_2.3.4.dusk --symgen symgen \
         build-windows/mods/translationfix.dusk build-linux-x86_64/mods/translationfix.dusk ...
 
-The 2.3.3 release contains builds for Windows x64, Linux x86_64, Linux arm64, macOS Apple
+The 2.3.4 release contains builds for Windows x64, Linux x86_64, Linux arm64, macOS Apple
 Silicon (arm64), macOS Intel (x86_64) and Android (arm64). Windows and macOS are
 cross-compiled with clang 18; `tools/toolchains/macos.cmake` is the macOS toolchain file (pass
 `-DMAC_ARCH=arm64` or `x86_64` and point `CMAKE_OSX_SYSROOT` at a macOS SDK).
