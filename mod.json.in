@@ -1,0 +1,9 @@
+{
+  "id": "com.example.translationfix",
+  "name": "Fixed Mistranslations & Restored Dialogue",
+  "version": "@PROJECT_VERSION@",
+  "author": "ahrbro",
+  "description": "Twilight Princess is for the most part a well-localized game. However, there are two instances of egregiously bad mistranslations that totally change the lore, worldbuilding, and character descriptions. This mod fixes those mistakes, restores some cut dialogue from Ganondorf, and lets you talk to the Twili in the Twilight Realm again (their original lines were left unused). The restored Ganondorf and Twili content can each be turned off in the Mods menu. It only replaces the affected lines (English), so it works alongside mods that change other text, such as the Linkle Mod. Credits: Auru's retranslation by ahrbro. Shad's retranslation comes mostly from Anna Cairistiona's translation, with a small rewording by ahrbro. The Goron's rockslide line fixes a continuity error pointed out by Zelda Wiki. Restored Ganondorf dialogue by kelpoo and UltraHylia. The Twili dialogue is the game's own unused text, documented by The Cutting Room Floor. Claude (Anthropic) wrote only the code: the compatibility with the Linkle Mod and the fix that lets the Twili talk again. It wrote none of the dialogue.",
+  "icon": "res/icon.png",
+  "banner": "res/banner.png"
+}
