@@ -1,28 +1,60 @@
-# Fixed Major Mistranslations & Mistakes
+# Fixed Mistranslations & Restored Dialogue
 
-Native Dusklight mod (`com.example.translationfix`). Since 2.0.0 it no longer overlays
-`res/Msgus/bmgres2.arc` / `bmgres4.arc`. It replaces 8 English messages at runtime through
-Dusklight's MessageService, so it works on top of whatever message files are loaded (vanilla,
-the Linkle Mod, or another text mod) and one .dusk covers every case.
+Native Dusklight mod (`com.example.translationfix`, version 2.3.1). It fixes a few English
+mistranslations in Twilight Princess and restores two pieces of cut dialogue.
 
-| Group (bmgresN) | Message | Fix |
+## How it works
+
+The mod does not overlay any message archive. At startup it replaces individual English
+messages through Dusklight's MessageService (`override_message`), keyed by message group and
+message ID. Because only those messages are touched, it works on top of whatever message files
+are loaded: vanilla, the Linkle Mod, or another text mod. One .dusk covers every case.
+
+| Group (bmgresN) | Message | Change |
 |---|---|---|
-| 2 | 6217 | rockslide "has blocked the way ... for some time now" |
-| 4 | 5609 | "I was appointed to be Princess Zelda's tutor" |
-| 4 | 5610 | "them" -> "then" |
-| 4 | 5716, 5717 | race closer to the gods created Hyrule / the Hylians' new capital |
-| 4 | 5718 | space after "..." ("They dwelt there... and some") |
-| 0 | 3726, 3727 | restored cut Ganondorf dialogue, by kelpoo and UltraHylia (tools/ganondorf_restoration_bmgres.arc) |
+| 2 | 6217 | Goron rockslide line: "has blocked the way ... for some time now" (continuity fix) |
+| 4 | 5609 | Auru: "I was appointed to be Princess Zelda's tutor" |
+| 4 | 5610 | Auru: "them" -> "then" |
+| 4 | 5716, 5717 | Shad: a race closer to the gods created Hyrule / the Hylians' new capital |
+| 4 | 5718 | Shad: space after "..." ("They dwelt there... and some") |
+| 0 | 3726, 3727 | Restored Ganondorf dialogue by kelpoo and UltraHylia (toggleable) |
 
-- `src/fixes.inc` is generated: `python3 -I tools/gen_fixes.py <vanilla bmgres2.arc> <vanilla bmgres4.arc> translationfix_1.0.0_original.zip tools/ganondorf_restoration_bmgres.arc > src/fixes.inc`
-- Build (Windows): see the project's cross-build recipe; then
-  `python3 tools/merge_mod.py -o com.example.translationfix_2.0.0.dusk --symgen symgen build/mods/translationfix.dusk`
-- `old-1.1.0-overlay/` holds the earlier overlay builds (vanilla and Linkle editions), kept for reference.
+### Twili dialogue (toggleable)
 
-## Twili dialogue (2.2.0)
+The Twili in the Palace of Twilight (`daNpc_yamiD_c`, `yamiS_c`, `yamiT_c`) still have their
+conversations in the game data (flows 801-806 in message group 5, messages 9701-9726), but
+`setParam()` always sets their attention flags to 0, so Link can never talk to them.
+`src/twili.cpp` post-hooks `setAttnPos()` on all three classes and turns the talk prompt back on
+when the Twili has a flow and is visible. The text is the game's own unused text.
 
-The Twili NPCs in the Palace of Twilight (`daNpc_yamiD_c`, `yamiS_c`, `yamiT_c`) still have their
-conversations (flows 801-806 in message group 5, messages 9701-9726), but `setParam()` always sets
-their attention flags to 0 so Link can't talk to them. `src/twili.cpp` post-hooks `setAttnPos()` on
-all three and turns the talk prompt back on when the Twili has a flow and is visible. Special
-thanks to The Cutting Room Floor for documenting the unused text.
+### Settings
+
+Both restorations can be switched off in the Mods menu ("Restored cut content"):
+`restoreGanondorfSpeech` and `restoreTwiliDialogue`, both on by default. The Ganondorf lines use
+`override_message_fn`, so the setting is checked live each time the message is shown.
+
+## Source layout
+
+- `src/mod.cpp`: mod entry point, settings, Mods-menu panel, message overrides.
+- `src/twili.cpp`: the Twili talk hooks.
+- `src/fixes.inc`: generated message texts, do not edit by hand.
+- `tools/gen_fixes.py`: regenerates `src/fixes.inc`:
+  `python3 -I tools/gen_fixes.py <vanilla bmgres2.arc> <vanilla bmgres4.arc> translationfix_1.0.0_original.zip tools/ganondorf_restoration_bmgres.arc > src/fixes.inc`
+- `tools/merge_mod.py`: packs the build into a .dusk and embeds the imported symbols.
+
+## Building
+
+Build with the Dusklight SDK (v2.0.2) for each target platform, then pack:
+
+    python3 tools/merge_mod.py -o com.example.translationfix_2.3.1.dusk --symgen symgen build/mods/translationfix.dusk
+
+The current release contains only a Windows x64 build (`lib/windows-amd64/mod.dll`).
+
+## Credits
+
+- Auru's retranslation by ahrbro.
+- Shad's retranslation comes mostly from Anna Cairistiona's translation, with a small rewording by ahrbro.
+- The Goron rockslide continuity error was pointed out by Zelda Wiki.
+- Restored Ganondorf dialogue by kelpoo and UltraHylia.
+- The Twili dialogue is the game's own unused text, documented by The Cutting Room Floor.
+- Claude (Anthropic) wrote only the code: the Linkle Mod compatibility and the Twili talk fix. It wrote none of the dialogue.
