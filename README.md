@@ -1,6 +1,6 @@
 # Fixed Mistranslations & Restored Dialogue
 
-Native Dusklight mod (`com.example.translationfix`, version 2.3.5). It fixes a few English
+Native Dusklight mod (`com.translationfix`, version 2.3.5). It fixes a few English
 mistranslations in Twilight Princess and restores two pieces of cut dialogue.
 
 ## How it works
@@ -44,16 +44,28 @@ Both restorations can be switched off in the Mods menu ("Restored cut content"):
 
 ## Building
 
+Releases are built by GitHub Actions (`.github/workflows/build.yml`, from the Dusklight
+mod-template): every push builds all 8 platforms with the official toolchains and merges them
+into one .dusk, and a tag attaches that .dusk to a GitHub release. The steps below are for
+building by hand.
+
 Build with the Dusklight SDK (v2.0.2) once per target platform, then merge the per-platform
 bundles into one .dusk:
 
-    python3 tools/merge_mod.py -o com.example.translationfix_2.3.5.dusk --symgen symgen \
+    python3 tools/merge_mod.py -o com.translationfix.dusk --symgen symgen \
         build-windows/mods/translationfix.dusk build-linux-x86_64/mods/translationfix.dusk ...
 
-The 2.3.5 release contains builds for Windows x64, Linux x86_64, Linux arm64, macOS Apple
+The 2.3.5 release contains builds for Windows x64, Windows ARM64, iOS (arm64), Linux x86_64, Linux arm64, macOS Apple
 Silicon (arm64), macOS Intel (x86_64) and Android (arm64). Windows and macOS are
 cross-compiled with clang 18; `tools/toolchains/macos.cmake` is the macOS toolchain file (pass
 `-DMAC_ARCH=arm64` or `x86_64` and point `CMAKE_OSX_SYSROOT` at a macOS SDK).
+Windows ARM64 uses `tools/toolchains/windows-arm64.cmake` with the Windows SDK's arm64 libraries
+and a tiny DLL startup (`windows-arm64-minicrt.c`) in place of the MSVC runtime libraries,
+built without exceptions or RTTI.
+
+iOS uses `tools/toolchains/ios.cmake` (iPhoneOS SDK, iOS 14.0 and up). On iOS, Dusklight only
+loads native mods that are bundled into the app and signed with it when the app is built, so
+this library is for people who build or sideload Dusklight with the mod included.
 
 Android uses the NDK's own toolchain file (NDK r29, API level 28):
 
